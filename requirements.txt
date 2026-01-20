@@ -1,0 +1,12 @@
+# requirements.txt
+langgraph
+langchain
+langchain-community
+youtube-transcript-api
+pytube
+beautifulsoup4
+requests
+markdown
+pydantic
+python-dotenv
+langchain-openai
