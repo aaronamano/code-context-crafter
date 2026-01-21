@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from dotenv import load_dotenv
@@ -45,11 +45,21 @@ async def process_url(request: AgentRequest):
         if final_state.get("error_message"):
             raise HTTPException(status_code=400, detail=final_state.get("error_message"))
         
-        # Return only markdown content
-        return final_state.get("markdown_content", "")
+        # Return markdown content and file path
+        return {
+            "markdown_content": final_state.get("markdown_content", ""),
+            "file_path": final_state.get("file_path")
+        }
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@app.get("/download/{file_path:path}")
+async def download_file(file_path: str):
+    try:
+        return FileResponse(file_path, filename=file_path.split("/")[-1])
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="File not found")
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):

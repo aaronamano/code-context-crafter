@@ -98,6 +98,13 @@
             max-height: 500px;
             overflow-y: auto;
         }
+        .download-btn {
+            background-color: #28a745;
+            margin-top: 15px;
+        }
+        .download-btn:hover {
+            background-color: #218838;
+        }
     </style>
 </head>
 <body>
@@ -125,10 +132,13 @@
         <div id="result" class="result" style="display: none;">
             <h3>Generated Markdown:</h3>
             <div id="resultContent" class="result-content"></div>
+            <button id="downloadBtn" class="download-btn" style="display: none;">Download Markdown File</button>
         </div>
     </div>
 
     <script>
+        let currentFilePath = null;
+        
         document.getElementById('urlForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -138,12 +148,15 @@
             const error = document.getElementById('error');
             const result = document.getElementById('result');
             const resultContent = document.getElementById('resultContent');
+            const downloadBtn = document.getElementById('downloadBtn');
             
             // Reset UI
             loading.style.display = 'block';
             error.style.display = 'none';
             result.style.display = 'none';
+            downloadBtn.style.display = 'none';
             submitBtn.disabled = true;
+            currentFilePath = null;
             
             try {
                 const response = await fetch('/agent', {
@@ -159,11 +172,17 @@
                     throw new Error(errorData.detail || 'Request failed');
                 }
                 
-                const markdownContent = await response.text();
+                const data = await response.json();
                 
                 // Display result
-                resultContent.textContent = markdownContent;
+                resultContent.textContent = data.markdown_content;
                 result.style.display = 'block';
+                
+                // Show download button if file was saved
+                if (data.file_path) {
+                    currentFilePath = data.file_path;
+                    downloadBtn.style.display = 'block';
+                }
                 
             } catch (err) {
                 error.textContent = 'Error: ' + err.message;
@@ -171,6 +190,30 @@
             } finally {
                 loading.style.display = 'none';
                 submitBtn.disabled = false;
+            }
+        });
+        
+        document.getElementById('downloadBtn').addEventListener('click', async function() {
+            if (currentFilePath) {
+                try {
+                    const response = await fetch(`/download/${encodeURIComponent(currentFilePath)}`);
+                    if (!response.ok) {
+                        throw new Error('Download failed');
+                    }
+                    
+                    const blob = await response.blob();
+                    const downloadUrl = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = downloadUrl;
+                    a.download = currentFilePath.split('/').pop();
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(downloadUrl);
+                    document.body.removeChild(a);
+                    
+                } catch (err) {
+                    alert('Download failed: ' + err.message);
+                }
             }
         });
     </script>

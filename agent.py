@@ -425,13 +425,13 @@ class TemplateCreator:
             # Prepare code snippets section
             code_snippets_text = ""
             if code_snippets:
-                code_snippets_text = "\n".join([f"```\n{snippet[:2000]}\n```" for snippet in code_snippets[:5]])
+                code_snippets_text = "\n".join([f"```\n{snippet}\n```" for snippet in code_snippets])
             
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             
             chain = prompt | self.llm | StrOutputParser()
             markdown_content = chain.invoke({
-                "content": content[:15000],
+                "content": content,
                 "content_type": content_type,
                 "url": url,
                 "timestamp": timestamp,
