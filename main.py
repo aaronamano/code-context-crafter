@@ -378,7 +378,7 @@ class TemplateCreator:
         code_snippets = state.get("code_snippets", [])
         
         prompt = ChatPromptTemplate.from_template("""
-        Create a comprehensive, detailed markdown document for a coding agent based on the following content.
+        Create a concise markdown guide for coding agents based on this content.
         
         Content Type: {content_type}
         Source URL: {url}
@@ -388,139 +388,37 @@ class TemplateCreator:
         
         {code_snippets_section}
         
-        Create a markdown document with these sections:
-        # [Detailed Title based on content]
+        Create markdown with these sections:
+        # [Title]
         
-        ## Source Information
-        - **URL**: {url}
-        - **Content Type**: {content_type}
-        - **Generated**: {timestamp}
-        - **Last Updated**: {timestamp}
-        
-        ## Executive Summary
-        - Brief overview of the main concepts
+        ## Quick Summary
+        - Main concepts (2-3 bullet points)
         - Key takeaways for developers
-        - Prerequisites and requirements
-        - Target audience level
+        - Prerequisites
         
-        ## Core Concepts & Fundamentals
-        - Detailed explanation of main concepts
-        - Theoretical background where applicable
-        - Key terminology and definitions
-        - How concepts relate to each other
-        - Real-world use cases and scenarios
-        
-        ## Detailed Implementation Guide
-        - Step-by-step implementation process
-        - Configuration requirements
-        - Environment setup instructions
-        - Dependencies and version requirements
-        - Installation and setup procedures
-        
-        ## Comprehensive Best Practices & Guidelines
-        - Performance optimization techniques
-        - Security considerations and measures
-        - Error handling strategies
-        - Code organization and structure
-        - Testing and validation approaches
-        - Documentation standards
-        
-        ## Complete Code Examples & Patterns
-        {code_examples_placeholder}
-        - Production-ready examples
-        - Common design patterns
-        - Integration examples with other tools/frameworks
-        - Full working implementations
-        - Code walkthroughs and explanations
-        
-        ## DO's and DON'Ts - Critical Guidelines
+        ## DO's and DON'Ts
         ### ✅ DO's
-        - List of recommended practices and approaches
-        - Things you should always do
-        - Best practices to follow
-        - Recommended configurations and settings
-        - Proper error handling approaches
+        - Best practice with code example
+        - Recommended approach with example
+        - Proper pattern with example
         
-        ### ❌ DON'Ts
-        - Common mistakes to avoid
-        - Anti-patterns and problematic approaches
-        - Things you should never do
-        - Deprecated methods or practices
-        - Security vulnerabilities to avoid
+        ### ❌ DON'Ts  
+        - Common mistake with code example
+        - Anti-pattern with example
+        - What to avoid with example
         
-        ## Advanced Techniques & Optimizations
-        - Performance tuning strategies
-        - Advanced usage patterns
-        - Scaling considerations
-        - Optimization tips and tricks
-        - Edge cases and how to handle them
+        ## Best Practices
+        - All key practices with brief examples
+        - Performance tips
+        - Security considerations
         
-        ## Troubleshooting & Debugging
-        - Common issues and their solutions
-        - Debugging techniques and tools
-        - Error message meanings and resolutions
-        - Performance bottlenecks and how to identify them
-        - Logging and monitoring recommendations
+        ## Quick Reference
+        - Essential code patterns
+        - Common commands/syntax
+        - Key parameters
         
-        ## Integration & Compatibility
-        - Integration with popular frameworks and libraries
-        - API compatibility considerations
-        - Database integration patterns
-        - Third-party service integrations
-        - Version compatibility matrix
-        
-        ## Testing Strategies
-        - Unit testing approaches and frameworks
-        - Integration testing strategies
-        - Performance testing methodologies
-        - Test-driven development (TDD) practices
-        - Continuous integration considerations
-        
-        ## Security Considerations
-        - Common security vulnerabilities
-        - Authentication and authorization patterns
-        - Data protection and encryption
-        - Secure coding practices
-        - Compliance and regulatory considerations
-        
-        ## Performance Metrics & Monitoring
-        - Key performance indicators (KPIs)
-        - Monitoring tools and techniques
-        - Performance benchmarking
-        - Resource utilization optimization
-        - Analytics and reporting
-        
-        ## Common Pitfalls & Solutions
-        - Frequently encountered problems
-        - Root cause analysis of common issues
-        - Preventive measures
-        - Recovery strategies
-        - Lessons learned from real-world deployments
-        
-        ## Frequently Asked Questions (FAQ)
-        - Common developer questions
-        - Clarification of confusing concepts
-        - Workarounds for known limitations
-        - Alternative approaches when primary methods fail
-        
-        ## Additional Resources & References
-        - Official documentation links
-        - Recommended books and tutorials
-        - Community forums and discussion groups
-        - Related tools and libraries
-        - Further reading and learning resources
-        - Video tutorials and courses
-        
-        ## Quick Reference Cheat Sheet
-        - Common commands and syntax
-        - Quick configuration snippets
-        - Frequently used code patterns
-        - Essential parameters and their meanings
-        
-        Make the content extremely detailed, practical, and actionable.
-        Include real-world examples, use cases, and scenario-based explanations.
-        Format all code blocks with proper language specification.
-        Ensure the content is comprehensive enough to serve as a complete reference guide.
+        Keep it concise, practical, and code-focused.
+        Include working examples for each concept.
         """)
         
         try:
