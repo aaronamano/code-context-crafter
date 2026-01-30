@@ -17,9 +17,18 @@ class AgentRequest(BaseModel):
 @app.post("/agent")
 async def process_url(request: AgentRequest):
     try:
-        # Create the workflow
+        import os
+        # Create workflow
         from agent import create_workflow
-        app = create_workflow()
+        openai_api_key = os.getenv("OPENAI_API_KEY")
+        firecrawl_api_key = os.getenv("FIRECRAWL_API_KEY")
+        
+        if not openai_api_key:
+            raise HTTPException(status_code=500, detail="Missing OPENAI_API_KEY in environment")
+        if not firecrawl_api_key:
+            raise HTTPException(status_code=500, detail="Missing FIRECRAWL_API_KEY in environment")
+            
+        workflow = create_workflow(openai_api_key, firecrawl_api_key)
         
         # Initial state
         initial_state = AgentState(
@@ -33,33 +42,27 @@ async def process_url(request: AgentRequest):
             content_relevant=None,
             content_type=None,
             markdown_content=None,
-            file_path=None,
+
             error_message=None,
             metadata={}
         )
         
         # Run the workflow
-        final_state = app.invoke(initial_state)
+        final_state = workflow.invoke(initial_state)
         
         # Check for errors
         if final_state.get("error_message"):
             raise HTTPException(status_code=400, detail=final_state.get("error_message"))
         
-        # Return markdown content and file path
+        # Return markdown content only (file path no longer used)
         return {
-            "markdown_content": final_state.get("markdown_content", ""),
-            "file_path": final_state.get("file_path")
+            "markdown_content": final_state.get("markdown_content", "")
         }
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
-@app.get("/download/{file_path:path}")
-async def download_file(file_path: str):
-    try:
-        return FileResponse(file_path, filename=file_path.split("/")[-1])
-    except FileNotFoundError:
-        raise HTTPException(status_code=404, detail="File not found")
+
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):

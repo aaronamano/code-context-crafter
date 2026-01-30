@@ -5,6 +5,9 @@ from urllib.parse import urlparse
 
 def sanitize_filename(filename: str) -> str:
     """Remove invalid characters from filename"""
+    if not filename:
+        return "untitled"
+    
     # Remove invalid characters
     filename = re.sub(r'[<>:"/\\|?*]', '', filename)
     # Replace spaces with underscores

@@ -13,3 +13,4 @@ langchain-openai
 fastapi
 uvicorn
 jinja2
+firecrawl
